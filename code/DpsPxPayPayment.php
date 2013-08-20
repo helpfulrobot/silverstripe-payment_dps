@@ -92,7 +92,7 @@ class DpsPxPayPayment extends Payment {
 		if(!$currency) {
 			$currency = EcommercePayment::site_currency();
 		}
-		$this->Currency->Currency = $currency;
+		$this->Amount->Currency = $currency;
 		$this->Amount->Amount = $amount;
 		//no need to write here, as it will be done by BuildURL
 		//$this->write();
@@ -110,8 +110,8 @@ class DpsPxPayPayment extends Payment {
 		$commsObject->setMerchantReference($this->ID);
 		//replace any character that is NOT [0-9] or dot (.)
 		$commsObject->setAmountInput(floatval(preg_replace("/[^0-9\.]/", "", $amount)));
-		if($this->Currency) {
-			$commsObject->setCurrencyInput($this->Currency);
+		if($this->Amount->Currency) {
+			$commsObject->setCurrencyInput($this->Amount->Currency);
 		}
 		else {
 			$commsObject->setCurrencyInput(Payment::site_currency());
