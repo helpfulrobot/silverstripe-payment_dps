@@ -63,15 +63,40 @@ class DpsPxPayPayment extends Payment {
 		return array();
 	}
 
+
 	function processPayment($data, $form) {
 		$order = $this->Order();
+		//if currency has been pre-set use this
+		$currency = $this->Amount->Currency;
+		//if amout has been pre-set, use this
+		$amount = $this->Amount->Amount;
 		if($order) {
+			//amount may need to be adjusted to total outstanding
+			//or amount may not have been set yet
 			$amount = $order->TotalOutstanding();
+			//get currency from Order
+			//this is better than the pre-set currency one
+			//which may have been set to the default
+			$currencyObject = $order->CurrencyUsed();
+			if($currencyObject) {
+				$currency = $currencyObject->Code;
+			}
 		}
-		else {
+		if(!$amount && !empty($data["Amount"])) {
 			$amount = floatval($data["Amount"]);
 		}
-		$url = $this->buildURL($amount);
+		if(!$currency && !empty($data["Currency"])) {
+			$currency = floatval($data["Currency"]);
+		}
+		//final backup for currency
+		if(!$currency) {
+			$currency = EcommercePayment::site_currency();
+		}
+		$this->Currency->Currency = $currency;
+		$this->Amount->Amount = $amount;
+		//no need to write here, as it will be done by BuildURL
+		//$this->write();
+		$url = $this->buildURL($amount, $currency);
 		return $this->executeURL($url);
 	}
 
