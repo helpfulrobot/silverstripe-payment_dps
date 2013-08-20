@@ -102,7 +102,7 @@ class DpsPxPayPayment extends Payment {
 		* process payment data (check if it is OK and go forward if it is...
 		**/
 		$url = $commsObject->startPaymentProcess();
-		$debugMessage = $commsObject->getDebugMessage().'<hr /><pre>'.print_r($this, 1). '</pre>';
+		$debugMessage = $commsObject->getDebugMessage().'<hr />PAYMENT OBJECT<pre>'.print_r($this, 1). '</pre>';
 		$this->DebugMessage = $debugMessage;
 		$this->write();
 		if(self::$email_debug) {
