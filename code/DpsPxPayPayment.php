@@ -100,7 +100,14 @@ class DpsPxPayPayment extends Payment {
 		return $this->executeURL($url);
 	}
 
-	protected function buildURL($amount) {
+	/**
+	 *
+	 * @param Float $amount
+	 * @param String $currency - e.g. NZD
+	 * @return String
+	 *
+	 */
+	protected function buildURL($amount, $currency) {
 		$commsObject = new DpsPxPayComs();
 
 		/**
@@ -110,12 +117,7 @@ class DpsPxPayPayment extends Payment {
 		$commsObject->setMerchantReference($this->ID);
 		//replace any character that is NOT [0-9] or dot (.)
 		$commsObject->setAmountInput(floatval(preg_replace("/[^0-9\.]/", "", $amount)));
-		if($this->Amount->Currency) {
-			$commsObject->setCurrencyInput($this->Amount->Currency);
-		}
-		else {
-			$commsObject->setCurrencyInput(Payment::site_currency());
-		}
+		$commsObject->setCurrencyInput($currency);
 
 		/**
 		* details of the redirection
@@ -127,7 +129,7 @@ class DpsPxPayPayment extends Payment {
 		* process payment data (check if it is OK and go forward if it is...
 		**/
 		$url = $commsObject->startPaymentProcess();
-		$debugMessage = $commsObject->getDebugMessage().'<hr />PAYMENT OBJECT<pre>'.print_r($this, 1). '</pre>';
+		$debugMessage = $commsObject->getDebugMessage();
 		$this->DebugMessage = $debugMessage;
 		$this->write();
 		if(self::$email_debug) {
