@@ -14,9 +14,6 @@ class DpsPxPayPayment extends Payment {
 		'DebugMessage' => 'HTMLText'
 	);
 
-	protected $Currency = "";
-		function setCurrency($s) {$this->Currency = $s;}
-
 	// DPS Information
 
 	protected static $privacy_link = 'http://www.paymentexpress.com/privacypolicy.htm';
