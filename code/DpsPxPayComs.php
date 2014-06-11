@@ -19,6 +19,8 @@ class DpsPxPayComs {
 		static function set_alternative_thirdparty_folder($v)   {self::$alternative_thirdparty_folder = $v;}
 	protected static $overriding_txn_type =  ""; //e.g. AUTH
 		static function set_overriding_txn_type($v)             {self::$overriding_txn_type = $v;}
+	protected static $alternative_currency =  ""; //e.g. AUTH
+		static function set_alternative_currency($v)             {self::$alternative_currency = $v;}
 
 	/**
 	* customer details
@@ -41,7 +43,7 @@ class DpsPxPayComs {
 	protected $MerchantReference = "";
 		public function setMerchantReference($v) {$this->MerchantReference = $v;}
 	protected $CurrencyInput = "NZD";
-		public function setCurrencyInput($v)     {$this->CurrencyInput = $v;}
+		public function setCurrencyInput($v)     {$this->CurrencyInput = strtoupper($v);}
 	protected $TxnType = "Purchase";
 		public function setTxnType($v)           {$this->TxnType = $v; if(self::$overriding_txn_type) {$this->TxnType = self::$overriding_txn_type;}}
 	protected $TxnId = "";
@@ -120,8 +122,12 @@ class DpsPxPayComs {
 		$request_string = $this->PxPayObject->makeRequest($request);
 
 		#Obtain output XML
+		//print_r($request);
+		//print_r($request_string);
 		$this->response = new MifMessage($request_string);
 		#Parse output XML
+		//print_r($this->response);
+		//die("AAA");
 		$url = $this->response->get_element_text("URI");
 		//$valid = $this->response->get_attribute("valid");
 
